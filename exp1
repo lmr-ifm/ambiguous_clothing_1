@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Expérience en ligne</title>
+  <script>
+    let participantId = Math.random().toString(36).substr(2, 9);
+    let reponseMinijupe = "";
+
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+      document.getElementById(pageId).style.display = 'block';
+    }
+
+    function consentement(val) {
+      if (val === 'oui') {
+        showPage('page2');
+      } else {
+        showPage('merci');
+      }
+    }
+
+    function enregistrerReponse(valeur) {
+      reponseMinijupe = valeur;
+      telechargerCSV();
+    }
+
+    function telechargerCSV() {
+      const contenu = `participant_id,reponse_minijupe\n${participantId},${reponseMinijupe}`;
+      const blob = new Blob([contenu], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `reponse_${participantId}.csv`;
+      a.click();
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Page 1 -->
+  <div class="page" id="page1">
+    <h2>Consentement</h2>
+    <p>Souhaitez-vous participer à cette expérience ?</p>
+    <button onclick="consentement('oui')">Oui</button>
+    <button onclick="consentement('non')">Non</button>
+  </div>
+
+  <!-- Page Merci -->
+  <div class="page" id="merci" style="display:none;">
+    <h2>Merci !</h2>
+  </div>
+
+  <!-- Page 2 -->
+  <div class="page" id="page2" style="display:none;">
+    <h2>Instructions</h2>
+    <p>Vous allez voir plusieurs images et vous devrez répondre à des questions.</p>
+    <button onclick="showPage('page3')">Suivant</button>
+  </div>
+
+  <!-- Page 3 -->
+  <div class="page" id="page3" style="display:none;">
+    <h2>Question 1</h2>
+    <img src="image_minijupe.jpg" alt="Image de la personne" style="max-width: 300px;"><br>
+    <p>En vous basant sur sa tenue vestimentaire, vous diriez que cette personne cherche d’abord...</p>
+    <button onclick="enregistrerReponse('séduire')">A séduire</button>
+    <button onclick="enregistrerReponse('se protéger de la chaleur')">A se protéger de la chaleur</button>
+  </div>
+
+</body>
+</html>
